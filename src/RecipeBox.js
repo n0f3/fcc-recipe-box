@@ -100,7 +100,6 @@ class RecipeBox extends React.Component {
       </div>
     );
   }
-
 }
 
 export default RecipeBox;
