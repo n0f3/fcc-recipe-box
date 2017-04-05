@@ -1,11 +1,9 @@
 import React from 'react';
-
+import RecipeBox from './RecipeBox';
 const App = () => {
   return (
-    <div className="panel panel-default">
-      <div className="panel-heading text-center" >
-        <h1>FreeCodeCamp Recipes box</h1>
-      </div>
+    <div className='container'>
+      <RecipeBox/>
     </div>
   );
 }
