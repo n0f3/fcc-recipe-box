@@ -36,7 +36,7 @@ class RecipeBox extends React.Component {
   }
 
   onCloseRecipeModal() {
-    this.setState({ showRecipeModal: false});
+    this.setState({ showRecipeModal: false, recipeToEdit: {} });
   }
   onAddRecipeClick() {
     this.setState({ showRecipeModal: true });
