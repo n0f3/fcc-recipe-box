@@ -22,7 +22,10 @@ class ModifierButtons extends React.Component {
       </div>
     );
   }
+}
 
+ModifierButtons.propTypes = {
+  buttons: React.PropTypes.array.isRequired
 }
 
 export default ModifierButtons;

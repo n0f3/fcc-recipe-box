@@ -20,4 +20,8 @@ const RecipeIngredients = (props) => {
   );
 }
 
+RecipeIngredients.propTypes = {
+  ingredients: React.PropTypes.string.isRequired,
+};
+
 export default RecipeIngredients;
