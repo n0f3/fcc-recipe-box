@@ -1,102 +1,127 @@
 import React from 'react';
-import { Button, Accordion, Panel } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import RecipeModal from './RecipeModal';
-import Recipe from './Recipe';
+import RecipeList from './RecipeList';
+import uuidv4 from 'uuid/v4';
 
 class RecipeBox extends React.Component {
   constructor() {
     super();
     this.state = {
       showRecipeModal: false,
-      isEditing: false,
-      recipes: [],
-      activeKey: -1,
-      recipeToEdit: {
-        recipeName: '',
-        recipeIngredients: ''
-      }
+      isEditModal: false,
+      recipes: [
+        {
+          id: uuidv4(),
+          recipeName: 'Pasta',
+          recipeIngredients: 'Flour,Butter,Eggs'
+        },
+        {
+          id: uuidv4(),
+          recipeName: 'Pizza',
+          recipeIngredients: 'Flour,Tomatoes,Cheese,Pepperoni'
+        },
+      ],
+      recipeToEdit: {}
     };
-    this.onOpenAddRecipe = this.onOpenAddRecipe.bind(this);
+    this.addRecipe = this.addRecipe.bind(this);
+    this.deleteRecipe = this.deleteRecipe.bind(this);
+    this.editRecipe = this.editRecipe.bind(this);
     this.onCloseRecipeModal = this.onCloseRecipeModal.bind(this);
-    this.onEditRecipe = this.onEditRecipe.bind(this);
-    this.onDeleteRecipe = this.onDeleteRecipe.bind(this);
-    this.onAddRecipe = this.onAddRecipe.bind(this);
-    this.handlePanelSelect = this.handlePanelSelect.bind(this);
-    this.handleRecipeEdited = this.handleRecipeEdited.bind(this);
+    this.onAddRecipeClick = this.onAddRecipeClick.bind(this);
+    this.onEditRecipeClick = this.onEditRecipeClick.bind(this);
+    this.onDeleteRecipeClick = this.onDeleteRecipeClick.bind(this);
+    this.handleAddRecipeSubmit = this.handleAddRecipeSubmit.bind(this);
+    this.handleEditRecipeSubmit = this.handleEditRecipeSubmit.bind(this);
   }
-  onAddRecipe(newRecipe) {
-    const newRecipes = this.state.recipes.concat([newRecipe]);
-    console.log(newRecipes);
-    this.setState(
-      { showRecipeModal: false,
-        isEditing:false,
-        recipes: newRecipes
-      });
-  }
-  onOpenAddRecipe() {
-    this.setState({ showRecipeModal: true });
-  }
+
   onCloseRecipeModal() {
     this.setState({ showRecipeModal: false});
   }
-  onDeleteRecipe() {
-    const newArray = Array.from(this.state.recipes);
-    newArray.splice(this.state.activeKey, 1);
-    this.setState({
-      showRecipeModal: false,
-      isEditing: false,
-      recipes: newArray
-    });
+  onAddRecipeClick() {
+    this.setState({ showRecipeModal: true });
   }
-  onEditRecipe() {
-    const activeRecipe = {};
-    Object.assign(activeRecipe, this.state.recipes[this.state.activeKey]);
+  onDeleteRecipeClick(recipeId) {
+    this.deleteRecipe(recipeId);
+  }
+  onEditRecipeClick(recipeId) {
     this.setState({
+      recipeToEdit: Object.assign({}, this.state.recipes.find((recipe) => recipe.id === recipeId)),
       showRecipeModal: true,
-      isEditing: true,
-      recipeToEdit: {
-        recipeName: activeRecipe.recipeName,
-        recipeIngredients: activeRecipe.recipeIngredients
-      }
+      isEditModal: true,
     });
   }
-  handlePanelSelect(activeKey) {
-    this.setState({ activeKey });
+  handleAddRecipeSubmit(newRecipe) {
+    this.addRecipe(newRecipe);
   }
-  handleRecipeEdited(newRecipe) {
-    const recipes = Array.from(this.state.recipes);
-    recipes[this.state.activeKey].recipeName = newRecipe.recipeName;
-    recipes[this.state.activeKey].recipeIngredients = newRecipe.recipeIngredients;
+  handleEditRecipeSubmit(newRecipe) {
+    this.editRecipe(newRecipe);
+  }
+  addRecipe(newRecipe) {
     this.setState({
+        showRecipeModal: false,
+        isEditModal: false,
+        recipes: this.state.recipes.concat(newRecipe)
+      });
+  }
+  deleteRecipe(recipeId) {
+    this.setState({
+      recipes: this.state.recipes.filter((recipe) => recipe.id !== recipeId)
+    });
+  }
+  editRecipe(newRecipe) {
+    this.setState({
+      isEditModal: false,
       showRecipeModal: false,
-      recipes: recipes
+      recipes: this.state.recipes.map((oldRecipe) => {
+        if (oldRecipe.id === newRecipe.id) {
+          return Object.assign({}, oldRecipe, {
+            id: newRecipe.id,
+            recipeName: newRecipe.recipeName,
+            recipeIngredients: newRecipe.recipeIngredients
+          });
+        } else {
+          return oldRecipe;
+        }
+      }),
+      recipeToEdit: {}
     });
   }
   render() {
+    const modalTitle = this.state.isEditModal ?
+      'Edit Recipe' :
+      'Add a new recipe to the cookbook!';
+    const modalSubmit = this.state.isEditModal ?
+      this.handleEditRecipeSubmit :
+      this.handleAddRecipeSubmit;
     return (
       <div>
         <div className='well well-lg'>
-          <Accordion onSelect={this.handlePanelSelect}>
-            {
-              this.state.recipes.map((recipe, index) => {
-                return(
-                  <Panel header={recipe.recipeName} eventKey={index} key={index}>
-                    <Recipe ingredients={recipe.recipeIngredients.split(',')} />
-                    <Button bsStyle='danger' onClick={this.onDeleteRecipe}>Delete</Button>
-                    <Button bsStyle='default' onClick={this.onEditRecipe}>Edit</Button>
-                  </Panel>
-                )
-              })
-            }
-          </Accordion>
+          <RecipeList
+            recipes={this.state.recipes}
+            onDeleteRecipe={this.onDeleteRecipeClick}
+            onEditRecipe={this.onEditRecipeClick}
+          />
         </div>
-        <Button bsStyle='primary' onClick={this.onOpenAddRecipe}> Add Recipe </Button>
-        <RecipeModal
-          showModal={this.state.showRecipeModal}
-          onClose={this.onCloseRecipeModal}
-          isEditing={this.state.isEditing}
-          onModalSubmit={this.state.isEditing ? this.handleRecipeEdited : this.onAddRecipe}
-          recipe={this.state.isEditing ? this.state.recipeToEdit : null}/>
+        <Button
+          bsStyle='primary'
+          onClick={this.onAddRecipeClick}
+        >
+          Add Recipe
+        </Button>
+        {
+          this.state.showRecipeModal &&
+            <RecipeModal
+              showModal={this.state.showRecipeModal}
+              onClose={this.onCloseRecipeModal}
+              isEditing={this.state.isEditModal}
+              title={modalTitle}
+              onModalSubmit={modalSubmit}
+              id={this.state.recipeToEdit.id}
+              name={this.state.recipeToEdit.recipeName}
+              ingredients={this.state.recipeToEdit.recipeIngredients}
+            />
+        }
       </div>
     );
   }
