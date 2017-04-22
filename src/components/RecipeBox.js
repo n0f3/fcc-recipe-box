@@ -7,7 +7,6 @@ import dummyRecipes from '../config/dummyData';
 class RecipeBox extends React.Component {
   constructor() {
     super();
-    console.log(dummyRecipes);
     this.state = {
       showRecipeModal: false,
       isEditModal: false,
