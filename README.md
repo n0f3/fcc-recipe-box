@@ -2,10 +2,12 @@
 
 React powered app that lets you save a number of recipes with relative ingredients. You can:  
 * Add a recipe
+  * Add recipe name
+  * Add recipe ingredients
 * Modifiy ingredients
 * Remove a recipe 
 
-## [Live demo](https://markdown-previewer-bxaruqjxby.now.sh/)
+## [Live demo](https://fcc-recipe-box-hklglvtoqb.now.sh)
 
 ## Installation
 
@@ -24,14 +26,16 @@ After this you can run ```npm start``` to run the dev server locally which will 
 └── src
     ├── components
     │   ├── App.js
-    │   ├── MarkdownAnalyzer.js
-    │   ├── markdownDummyInput.js
-    │   └── MarkdownOutput.js
+    │   ├── ModifierButtons.js
+    │   ├── RecipeBox.js
+    │   ├── RecipeForm.js
+    │   ├── RecipeIngredients.js
+    │   ├── Recipe.js
+    │   ├── RecipeList.js
+    │   └── RecipeModal.js
+    ├── config
+    │   └── dummyData.json
     └── index.js
+
 ```
-## Deployment
 
-I have added the ability to deploy the app if you'd like to see it running on somewhere other than localhost.
-
-It's using [Now](https://zeit.co/now) and the [serve](https://github.com/zeit/serve) package to make a simple
-deployment. To install now, run ```npm install -g now```. After that simply run ```now``` from the root of the project.
