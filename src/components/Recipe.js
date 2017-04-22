@@ -1,6 +1,7 @@
 import React from 'react';
 import RecipeIngredients from './RecipeIngredients';
 import ModifierButtons from './ModifierButtons';
+import PropTypes from 'prop-types';
 
 class Recipe extends React.Component {
   constructor(props) {
@@ -38,10 +39,10 @@ class Recipe extends React.Component {
 }
 
 Recipe.propTypes = {
-  recipeId: React.PropTypes.string.isRequired,
-  recipeIngredients: React.PropTypes.string.isRequired,
-  onDeleteRecipe: React.PropTypes.func.isRequired,
-  onEditRecipe: React.PropTypes.func.isRequired
+  recipeId: PropTypes.string.isRequired,
+  recipeIngredients: PropTypes.string.isRequired,
+  onDeleteRecipe: PropTypes.func.isRequired,
+  onEditRecipe: PropTypes.func.isRequired
 };
 
 export default Recipe;

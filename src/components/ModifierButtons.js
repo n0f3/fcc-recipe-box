@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, ButtonToolbar } from 'react-bootstrap';
 import uuidv4 from 'uuid/v4';
+import PropTypes from 'prop-types';
 
 class ModifierButtons extends React.Component {
   render() {
@@ -25,7 +26,7 @@ class ModifierButtons extends React.Component {
 }
 
 ModifierButtons.propTypes = {
-  buttons: React.PropTypes.array.isRequired
+  buttons: PropTypes.array.isRequired
 }
 
 export default ModifierButtons;

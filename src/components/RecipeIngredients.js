@@ -5,8 +5,10 @@ import uuidv4 from 'uuid/v4';
 const RecipeIngredients = (props) => {
   const ingredients = props.ingredients.split(',').map(
     (ingredient, index) => {
-    return <ListGroupItem key={uuidv4()}>{ingredient}</ListGroupItem>
-  });
+      if (ingredient === '') return null;
+      return <ListGroupItem key={uuidv4()}>{ingredient}</ListGroupItem>
+    }
+  );
   return (
     <div>
       <h4 className='text-center'>

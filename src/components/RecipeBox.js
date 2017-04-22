@@ -2,26 +2,16 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 import RecipeModal from './RecipeModal';
 import RecipeList from './RecipeList';
-import uuidv4 from 'uuid/v4';
+import dummyRecipes from '../config/dummyData';
 
 class RecipeBox extends React.Component {
   constructor() {
     super();
+    console.log(dummyRecipes);
     this.state = {
       showRecipeModal: false,
       isEditModal: false,
-      recipes: [
-        {
-          id: uuidv4(),
-          recipeName: 'Pasta',
-          recipeIngredients: 'Flour,Butter,Eggs'
-        },
-        {
-          id: uuidv4(),
-          recipeName: 'Pizza',
-          recipeIngredients: 'Flour,Tomatoes,Cheese,Pepperoni'
-        },
-      ],
+      recipes: dummyRecipes,
       recipeToEdit: {}
     };
     this.addRecipe = this.addRecipe.bind(this);
@@ -35,15 +25,28 @@ class RecipeBox extends React.Component {
     this.handleEditRecipeSubmit = this.handleEditRecipeSubmit.bind(this);
   }
 
+  componentWillMount() {
+    if(!localStorage.getItem('recipes')) {
+      localStorage.setItem('recipes', JSON.stringify(this.state.recipes))
+    } else {
+      this.setState(Object.assign({}, this.state, {
+        recipes: JSON.parse(localStorage.getItem('recipes'))
+      }));
+    }
+  }
+
   onCloseRecipeModal() {
     this.setState({ showRecipeModal: false, recipeToEdit: {} });
   }
+
   onAddRecipeClick() {
     this.setState({ showRecipeModal: true });
   }
+
   onDeleteRecipeClick(recipeId) {
     this.deleteRecipe(recipeId);
   }
+  
   onEditRecipeClick(recipeId) {
     this.setState({
       recipeToEdit: Object.assign({}, this.state.recipes.find((recipe) => recipe.id === recipeId)),
@@ -51,29 +54,37 @@ class RecipeBox extends React.Component {
       isEditModal: true,
     });
   }
+
   handleAddRecipeSubmit(newRecipe) {
     this.addRecipe(newRecipe);
   }
+
   handleEditRecipeSubmit(newRecipe) {
     this.editRecipe(newRecipe);
   }
+
   addRecipe(newRecipe) {
+    const newRecipes = this.state.recipes.concat(newRecipe);
+    localStorage.setItem('recipes', JSON.stringify(newRecipes));
     this.setState({
-        showRecipeModal: false,
-        isEditModal: false,
-        recipes: this.state.recipes.concat(newRecipe)
-      });
+      showRecipeModal: false,
+      isEditModal: false,
+      recipes: newRecipes
+    });
+   
   }
+
   deleteRecipe(recipeId) {
+    const newRecipes = this.state.recipes.filter((recipe) => recipe.id !== recipeId);
+    localStorage.setItem('recipes', JSON.stringify(newRecipes));
     this.setState({
-      recipes: this.state.recipes.filter((recipe) => recipe.id !== recipeId)
+      recipes: newRecipes
     });
   }
+
   editRecipe(newRecipe) {
-    this.setState({
-      isEditModal: false,
-      showRecipeModal: false,
-      recipes: this.state.recipes.map((oldRecipe) => {
+    const newRecipes =
+      this.state.recipes.map((oldRecipe) => {
         if (oldRecipe.id === newRecipe.id) {
           return Object.assign({}, oldRecipe, {
             id: newRecipe.id,
@@ -83,10 +94,16 @@ class RecipeBox extends React.Component {
         } else {
           return oldRecipe;
         }
-      }),
+    }); 
+    localStorage.setItem('recipes', JSON.stringify(newRecipes));
+    this.setState({
+      isEditModal: false,
+      showRecipeModal: false,
+      recipes: newRecipes,
       recipeToEdit: {}
     });
   }
+
   render() {
     const modalTitle = this.state.isEditModal ?
       'Edit Recipe' :

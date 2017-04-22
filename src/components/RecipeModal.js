@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap';
 import RecipeForm from './RecipeForm';
 import uuidv4 from 'uuid/v4';
 import ModifierButtons from './ModifierButtons';
+import PropTypes from 'prop-types';
 
 class RecipeModal extends React.Component {
   constructor(props) {
@@ -16,16 +17,19 @@ class RecipeModal extends React.Component {
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleIngredientsChange = this.handleIngredientsChange.bind(this);
   }
+
   handleNameChange(e) {
     this.setState({
       recipeName: e.target.value,
     });
   }
+
   handleIngredientsChange(e) {
     this.setState({
       recipeIngredients: e.target.value,
     });
   }
+
   handleSubmit() {
     this.props.onModalSubmit({
       id: this.state.id,
@@ -33,6 +37,7 @@ class RecipeModal extends React.Component {
       recipeIngredients: this.state.recipeIngredients
     });
   }
+
   render() {
     const submitBtnText = this.props.isEditing ? 'Edit Recipe' : 'Add Recipe';
     return (
@@ -66,13 +71,13 @@ class RecipeModal extends React.Component {
 }
 
 RecipeModal.propTypes = {
-  name: React.PropTypes.string,
-  ingredients: React.PropTypes.string,
-  title: React.PropTypes.string.isRequired,
-  showModal: React.PropTypes.bool.isRequired,
-  onClose: React.PropTypes.func.isRequired,
-  onModalSubmit: React.PropTypes.func.isRequired,
-  isEditing: React.PropTypes.bool.isRequired
+  name: PropTypes.string,
+  ingredients: PropTypes.string,
+  title: PropTypes.string.isRequired,
+  showModal: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onModalSubmit: PropTypes.func.isRequired,
+  isEditing: PropTypes.bool.isRequired
 };
 
 export default RecipeModal;
