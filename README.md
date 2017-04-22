@@ -7,7 +7,7 @@ React powered app that lets you save a number of recipes with relative ingredien
 * Modifiy ingredients
 * Remove a recipe 
 
-## [Live demo](https://fcc-recipe-box-hklglvtoqb.now.sh)
+## [Live demo](https://n0f3.github.io/fcc-recipe-box/)
 
 ## Installation
 
